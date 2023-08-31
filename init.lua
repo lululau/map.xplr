@@ -226,9 +226,24 @@ end
 local function execute()
   local cmd = table.concat(state.lines, "\n")
 
-  os.execute(cmd)
-  io.write("\n[press ENTER to continue]")
-  io.flush()
+  -- Write cmd to a temp file
+  local tmpfile = os.tmpname()
+  local f = io.open(tmpfile, "w")
+  f:write(cmd)
+  f:close()
+
+  -- Execute the temp file
+  os.execute("bash " .. tmpfile .. " > /dev/tty 2>&1")
+
+  -- Clean up the temp file
+  os.remove(tmpfile)
+
+  local tty = io.open("/dev/tty", "w")
+  if tty then
+    tty:write("\n[press ENTER to continue]")
+    tty:flush()
+  end
+
   _ = io.read()
 end
 
