@@ -342,7 +342,11 @@ local function create_map_mode(custom, mode, editor, editor_key)
           },
         },
         ["ctrl-c"] = {
-          messages = { "Terminate" },
+          help = "cancel",
+          messages = {
+            "PopMode",
+            "ExplorePwd",
+          },
         },
       },
       default = {
